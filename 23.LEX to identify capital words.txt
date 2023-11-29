@@ -1,0 +1,30 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+[A-Z][A-Za-z]*   { printf("Capital Word: %s\n", yytext); }
+.                { /* Ignore other characters */ }
+%%
+
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\lex program>flex 23.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+Saikiran Sujith nagurvali
+Capital Word: Saikiran
+Capital Word: Sujith
