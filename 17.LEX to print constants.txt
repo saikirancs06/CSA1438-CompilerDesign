@@ -1,0 +1,56 @@
+LEX Program:
+
+%{
+#include<stdio.h>
+int cons=0;
+%}
+%%
+[0-9]+ { cons++; printf("%s is a constant\n", yytext);  }
+.|\n { }
+%%
+int yywrap() 
+{
+return 1; 
+}
+int main(void)
+{
+FILE *f;
+char file[10];
+printf("enter file name:");
+scanf("%s",file);
+f=fopen(file,"r");
+yyin=f;
+yylex();
+printf("Number of Constants : %d\n", cons);
+fclose(yyin);
+}
+
+Input Program:
+
+#define PI 3.14
+#include<stdio.h>#include<conio.h>
+voidmain()
+{
+            inta,b,c=30;
+printf("hello");
+}
+
+Output:
+
+Microsoft Windows [Version 10.0.22621.2715]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 17.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+enter file name:17.c
+3 is a constant
+14 is a constant
+30 is a constant
+Number of Constants : 3
+
+C:\lex program>
