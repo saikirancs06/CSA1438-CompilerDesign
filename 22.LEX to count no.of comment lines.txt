@@ -1,0 +1,50 @@
+LEX Program:
+
+%{
+#include<stdio.h>
+int nc=0;
+%}
+%%
+"/*"[a-zA-Z0-9\n\t]*"*/" {nc++;}
+"//"[a-zA-Z0-9\t]*"\n" {nc++;}
+%%
+int yywrap(){}
+int main(void)
+{
+FILE *f;
+char file[10];
+printf("enter file name:");
+scanf("%s",file);
+f=fopen(file,"r");
+yyin=f;
+yylex();
+printf("the number of comment lines=%d\n",nc);
+fclose(yyin);
+}
+
+Input Program:
+
+#include<stdio.h>
+intmain()
+{
+int a,b,c; /*varible declaration*/printf(“enter two numbers”);scanf(“%d %d”,&a,&b);c=a+b;//adding two numbersprintf(“sumis %d”,c);
+return0;
+}
+
+Output:
+
+C:\lex program>flex 22.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+enter file name:22.c
+#include<stdio.h>
+intmain()
+{
+int a,b,c; /*varible declaration*/printf(ΓÇ£enter two numbersΓÇ¥);scanf(ΓÇ£%d %dΓÇ¥,&a,&b);c=a+b;//adding two numbersprintf(ΓÇ£sumis %dΓÇ¥,c);
+return0;
+}
+the number of comment lines=0
+
+C:\lex program>
