@@ -1,0 +1,56 @@
+LEX Program:
+
+%{
+int nmacro, nheader; 
+%}
+%%
+^#define { nmacro++; } 
+^#include { nheader++; } 
+.|\n { } 
+%%
+int yywrap() 
+{ 
+return 1; 
+} 
+int main(void)
+{
+FILE *f;
+char file[10];
+printf("enter file name:");
+scanf("%s",file);
+f=fopen(file,"r");
+yyin=f;
+yylex();
+printf("Number of macros defined = %d\n", nmacro); 
+printf("Number of header files included = %d\n", nheader); 
+fclose(yyin);
+}
+
+Input Program:
+
+#define PI 3.14
+#include<stdio.h>
+#include<conio.h>
+voidmain()
+{
+inta,b,c=30;
+printf("hello");
+}
+
+Output:
+
+Microsoft Windows [Version 10.0.22621.2715]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 18.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+enter file name:18.c
+Number of macros defined = 1
+Number of header files included = 2
+
+C:\lex program>
