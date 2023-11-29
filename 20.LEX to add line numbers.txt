@@ -1,0 +1,67 @@
+LEX Program:
+
+%{
+#include<stdio.h>
+int ln=0;
+%}
+%%
+
+.* {ln++; fprintf(yyout,"\n%d:%s",ln,yytext);}
+%%
+int yywrap(){}
+
+int main(void)
+{
+FILE *f;
+char file[10];
+printf("enter file name:");
+scanf("%s",file);
+f=fopen(file,"r");
+yyin=f;
+yylex();
+printf("number of lines: %d",ln);
+fclose(yyin);
+}
+
+Input Program:
+
+#define PI 3.14
+#include<stdio.h>
+#include<conio.h>
+voidmain()
+{
+inta,b,c=30;
+printf("hello");
+}
+
+Output:
+
+Microsoft Windows [Version 10.0.22621.2715]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 20.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+enter file name:20.c
+
+1:#define PI 3.14
+
+2:#include<stdio.h>
+
+3:#include<conio.h>
+
+4:voidmain()
+
+5:{
+
+6:inta,b,c=30;
+
+7:printf("hello");
+
+8:}
+number of lines: 8
+C:\lex program>
