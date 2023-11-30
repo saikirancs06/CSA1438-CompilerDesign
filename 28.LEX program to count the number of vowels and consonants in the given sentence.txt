@@ -1,0 +1,45 @@
+LEX Program:
+
+%{
+int vowel_count = 0;
+int consonant_count = 0;
+%}
+
+%%
+[aAeEiIoOuU]    { vowel_count++; }
+[a-zA-Z]        { consonant_count++; }
+%%
+int yywrap() 
+{
+return 1;
+}
+int main(void)
+{
+FILE *f;
+char file[10];
+printf("enter file name:");
+scanf("%s",file);
+f=fopen(file,"r");
+yyin=f;
+yylex();
+printf("Number of vowels:%d\n",vowel_count);
+printf("Number of consonants:%d\n",consonant_count);
+fclose(yyin);
+}
+
+Input:
+
+Vowel sounds allow the air to flow freely causing the chin to drop noticeably whilst consonant sounds are produced by restricting the air flow.
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 28.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+enter file name:28.c
+                        Number of vowels:42
+Number of consonants:77
