@@ -1,0 +1,32 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}   { printf("Valid Email: %s\n", yytext); }
+.                                               { printf("Invalid Email: %s\n", yytext); }
+%%
+
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    yylex();
+    return 0;
+}
+ 
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 24.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+saikiran@gmail.com
+Valid Email: saikiran@gmail.com
+
