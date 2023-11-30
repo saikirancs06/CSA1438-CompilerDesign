@@ -1,0 +1,34 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+abc     { printf("ABC"); }
+.       { printf("%c", yytext[0]); }
+%%
+
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 25.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+abc
+ABC
+
+
+

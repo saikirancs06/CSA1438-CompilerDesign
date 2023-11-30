@@ -1,0 +1,32 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+[0-9]{10}   { printf("Valid Mobile Number: %s\n", yytext); }
+.|\n        { printf("Invalid Mobile Number\n"); }
+%%
+
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    printf("Enter a mobile number: ");
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 26.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+Enter a mobile number: 8317504833
+Valid Mobile Number: 8317504833
