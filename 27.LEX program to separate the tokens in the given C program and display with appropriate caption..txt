@@ -1,0 +1,74 @@
+LEX Program:
+
+%{
+#include<stdio.h>
+%}
+%%
+bool|int|float|main|printf {printf("\n%s is a Keyword",yytext);}
+[-,+]?[0-9]+ {printf("\n%s is a Constants",yytext);}
+[,.'"]+ {printf("\n%s is a Punctuation Chars",yytext);}
+[!@#$%^&*()]+ {printf("\n%s is a Special Chars",yytext);}
+[a-zA-Z]+ {printf("\n%s is a Identifiers",yytext);}
+%%
+int yywrap()
+{
+return 1;
+}
+int main(void)
+{
+FILE *f;
+char file[10];
+printf("enter file name:");
+scanf("%s",file);
+f=fopen(file,"r");
+yyin=f;
+yylex();
+fclose(yyin);
+}
+
+Input:
+
+#include<stdio.h>
+void main()
+{
+int a,b,c = 30; 
+printf("hello");
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 27.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+enter file name:27.c
+
+# is a Special Chars
+include is a Identifiers<
+stdio is a Identifiers
+. is a Punctuation Chars
+h is a Identifiers>
+
+void is a Identifiers
+main is a Keyword
+() is a Special Chars
+{
+
+int is a Keyword
+a is a Identifiers
+, is a Punctuation Chars
+b is a Identifiers
+, is a Punctuation Chars
+c is a Identifiers =
+30 is a Constants;
+
+printf is a Keyword
+( is a Special Chars
+" is a Punctuation Chars
+hello is a Identifiers
+" is a Punctuation Chars
+) is a Special Chars;
+}
