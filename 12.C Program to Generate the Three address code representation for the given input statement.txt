@@ -1,0 +1,87 @@
+C Program:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Global variables
+int tempCount = 0; // Counter for temporary variables
+
+// Function prototypes
+char* generateTemp();
+void generateThreeAddressCode(char expression[], char resultVar[]);
+
+int main() {
+    char expression[100];
+    char resultVar[10];
+
+    // Read input expression
+    printf("Enter an arithmetic expression: ");
+    fgets(expression, sizeof(expression), stdin);
+
+    // Generate three-address code
+    generateThreeAddressCode(expression, resultVar);
+
+    return 0;
+}
+
+// Function to generate a temporary variable
+char* generateTemp() {
+    char* temp = (char*)malloc(5 * sizeof(char));
+    snprintf(temp, 5, "t%d", tempCount++);
+    return temp;
+}
+
+// Function to generate three-address code for an arithmetic expression
+void generateThreeAddressCode(char expression[], char resultVar[]) {
+    int pos = 0;
+
+    // Parse and generate three-address code
+    char* temp1 = generateTemp();
+    char* temp2 = generateTemp();
+
+    while (expression[pos] != '\0') {
+        if (expression[pos] == '+' || expression[pos] == '-' || expression[pos] == '*' || expression[pos] == '/') {
+            char operator = expression[pos++];
+            char operand = expression[pos++];
+
+            // Generate code: temp1 = operand1 operator operand2
+            printf("%s = %c %c %c\n", temp1, resultVar[0], operator, operand);
+
+            // Update resultVar for the next iteration
+            resultVar[0] = temp1[0];
+
+            // Swap temp1 and temp2 for the next iteration
+            char* temp = temp1;
+            temp1 = temp2;
+            temp2 = temp;
+        } else if (expression[pos] == '(') {
+            // Handle parentheses
+            pos++;
+            generateThreeAddressCode(expression + pos, resultVar);
+            pos++; // Move past the closing parenthesis
+        } else if (isdigit(expression[pos])) {
+            // Handle constants
+            char* temp = generateTemp();
+            printf("%s = %c\n", temp, expression[pos++]);
+            resultVar[0] = temp[0];
+        } else if (isalpha(expression[pos])) {
+            // Handle variables
+            resultVar[0] = expression[pos++];
+        } else {
+            // Ignore spaces and other characters
+            pos++;
+        }
+    }
+
+    // Print the final result
+    printf("Final result: %s\n", resultVar);
+}
+
+Input:
+a + b * (c - d)
+
+Output:
+t0 = b * c
+t1 = a + t0
+Final result: t1

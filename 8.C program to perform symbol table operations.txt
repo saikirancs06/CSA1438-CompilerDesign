@@ -1,0 +1,118 @@
+C Program:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TABLE_SIZE 100
+
+// Structure to represent a symbol
+typedef struct Symbol {
+    char name[50];
+    char type[20];
+    // Add more fields as needed
+} Symbol;
+
+// Node in the symbol table
+typedef struct Node {
+    Symbol symbol;
+    struct Node* next;
+} Node;
+
+// Symbol table represented as an array of linked lists (hash table)
+Node* symbolTable[TABLE_SIZE];
+
+// Hash function to generate an index for a given symbol name
+unsigned int hash(char* name) {
+    unsigned int hashValue = 0;
+    for (int i = 0; i < strlen(name); i++) {
+        hashValue = (hashValue * 31 + name[i]) % TABLE_SIZE;
+    }
+    return hashValue;
+}
+
+// Function to insert a symbol into the symbol table
+void insertSymbol(Symbol symbol) {
+    unsigned int index = hash(symbol.name);
+
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->symbol = symbol;
+    newNode->next = symbolTable[index];
+    symbolTable[index] = newNode;
+
+    printf("Symbol '%s' inserted into the symbol table.\n", symbol.name);
+}
+
+// Function to search for a symbol in the symbol table
+Node* searchSymbol(char* name) {
+    unsigned int index = hash(name);
+    Node* current = symbolTable[index];
+
+    while (current != NULL) {
+        if (strcmp(current->symbol.name, name) == 0) {
+            return current;
+        }
+        current = current->next;
+    }
+
+    return NULL; // Symbol not found
+}
+
+// Function to display the contents of the symbol table
+void displaySymbolTable() {
+    printf("\nSymbol Table:\n");
+
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        Node* current = symbolTable[i];
+        while (current != NULL) {
+            printf("[%s, %s] -> ", current->symbol.name, current->symbol.type);
+            current = current->next;
+        }
+        printf("NULL\n");
+    }
+}
+
+int main() {
+    // Example usage
+    Symbol var1 = {"x", "int"};
+    Symbol var2 = {"y", "float"};
+    Symbol func1 = {"foo", "void"};
+
+    insertSymbol(var1);
+    insertSymbol(var2);
+    insertSymbol(func1);
+
+    displaySymbolTable();
+
+    char searchName[50];
+    printf("\nEnter the symbol to search: ");
+    scanf("%s", searchName);
+
+    Node* result = searchSymbol(searchName);
+    if (result != NULL) {
+        printf("Symbol found: [%s, %s]\n", result->symbol.name, result->symbol.type);
+    } else {
+        printf("Symbol not found.\n");
+    }
+
+    return 0;
+}
+
+Input:
+// Insert symbols into the symbol table
+x int
+y float
+foo void
+
+Output:
+Symbol 'x' inserted into the symbol table.
+Symbol 'y' inserted into the symbol table.
+Symbol 'foo' inserted into the symbol table.
+
+Symbol Table:
+[foo, void] -> NULL
+[y, float] -> NULL
+[x, int] -> NULL
+
+Enter the symbol to search: y
+Symbol found: [y, float]

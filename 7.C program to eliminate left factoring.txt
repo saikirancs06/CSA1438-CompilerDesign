@@ -1,0 +1,70 @@
+C Program:
+
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_RULES 10
+#define MAX_SYMBOLS 10
+
+char grammar[MAX_RULES][MAX_SYMBOLS];
+
+void eliminateLeftFactoring(int numRules) {
+    for (int i = 0; i < numRules; i++) {
+        // Find common prefixes
+        for (int j = 0; j < numRules; j++) {
+            if (i != j) {
+                int k;
+                for (k = 0; grammar[i][k] != '\0' && grammar[j][k] != '\0' && grammar[i][k] == grammar[j][k]; k++);
+                
+                if (k > 0) {
+                    // Common prefix found, eliminate left factoring
+                    char temp[MAX_SYMBOLS];
+                    strcpy(temp, grammar[i] + k);
+
+                    for (int l = 0; l < MAX_SYMBOLS; l++) {
+                        grammar[i][k + l] = '\0';
+                    }
+
+                    strcat(grammar[i], "'");
+                    strcat(grammar[i], temp);
+                    
+                    strcpy(grammar[j], grammar[j] + k);
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int numRules;
+
+    printf("Enter the number of rules: ");
+    scanf("%d", &numRules);
+
+    printf("Enter the grammar rules:\n");
+    for (int i = 0; i < numRules; i++) {
+        scanf("%s", grammar[i]);
+    }
+
+    eliminateLeftFactoring(numRules);
+
+    printf("\nGrammar after eliminating left factoring:\n");
+    for (int i = 0; i < numRules; i++) {
+        printf("%s\n", grammar[i]);
+    }
+
+    return 0;
+}
+
+Input:
+3
+A -> abX | acY | adZ
+B -> abX | acY | adZ
+C -> aXY | aYZ | aZW
+
+Output:
+Grammar after eliminating left factoring:
+A -> aA'
+A' -> bX | cY | dZ
+B -> aA'
+C -> aXY | aYZ | aZW

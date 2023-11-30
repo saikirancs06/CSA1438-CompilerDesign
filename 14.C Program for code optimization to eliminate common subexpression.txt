@@ -1,0 +1,62 @@
+C Program:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to represent an expression
+typedef struct {
+    char expression[20];
+    char result[20];
+} Expression;
+
+// Function to perform common subexpression elimination
+void eliminateCommonSubexpression(Expression* expressions, int numExpressions) {
+    for (int i = 0; i < numExpressions - 1; i++) {
+        for (int j = i + 1; j < numExpressions; j++) {
+            if (strcmp(expressions[i].expression, expressions[j].expression) == 0) {
+                // Common subexpression found, eliminate it
+                strcpy(expressions[j].expression, "");
+                strcpy(expressions[j].result, expressions[i].result);
+            }
+        }
+    }
+}
+
+// Function to print optimized expressions
+void printOptimizedExpressions(Expression* expressions, int numExpressions) {
+    printf("\nOptimized Expressions:\n");
+
+    for (int i = 0; i < numExpressions; i++) {
+        if (strlen(expressions[i].expression) > 0) {
+            printf("%s = %s\n", expressions[i].result, expressions[i].expression);
+        }
+    }
+}
+
+int main() {
+    // Example expressions
+    Expression expressions[] = {
+        {"a + b", "t1"},
+        {"c - d", "t2"},
+        {"a + b", "t3"},
+        {"e * f", "t4"},
+        {"c - d", "t5"},
+    };
+
+    int numExpressions = sizeof(expressions) / sizeof(Expression);
+
+    // Perform common subexpression elimination
+    eliminateCommonSubexpression(expressions, numExpressions);
+
+    // Print optimized expressions
+    printOptimizedExpressions(expressions, numExpressions);
+
+    return 0;
+}
+
+Output:
+Optimized Expressions:
+t1 = a + b
+t2 = c - d
+t4 = e * f

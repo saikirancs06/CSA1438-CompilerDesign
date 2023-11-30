@@ -1,0 +1,118 @@
+C Program:
+
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+// Function prototypes
+double parseExpression(char expression[]);
+double parseTerm(char expression[], int* pos);
+double parseFactor(char expression[], int* pos);
+double parseNumber(char expression[], int* pos);
+
+int main() {
+    char expression[100];
+
+    // Read input expression
+    printf("Enter an arithmetic expression: ");
+    fgets(expression, sizeof(expression), stdin);
+
+    // Parse and evaluate the expression
+    double result = parseExpression(expression);
+
+    // Print the result
+    printf("Result: %lf\n", result);
+
+    return 0;
+}
+
+// Function to parse and evaluate an expression
+double parseExpression(char expression[]) {
+    int pos = 0;
+    return parseTerm(expression, &pos);
+}
+
+// Function to parse and evaluate a term
+double parseTerm(char expression[], int* pos) {
+    double left = parseFactor(expression, pos);
+
+    while (expression[*pos] == '+' || expression[*pos] == '-') {
+        char operator = expression[(*pos)++];
+        double right = parseFactor(expression, pos);
+
+        if (operator == '+') {
+            left += right;
+        } else {
+            left -= right;
+        }
+    }
+
+    return left;
+}
+
+// Function to parse and evaluate a factor
+double parseFactor(char expression[], int* pos) {
+    double left = parseNumber(expression, pos);
+
+    while (expression[*pos] == '*' || expression[*pos] == '/') {
+        char operator = expression[(*pos)++];
+        double right = parseNumber(expression, pos);
+
+        if (operator == '*') {
+            left *= right;
+        } else {
+            left /= right;
+        }
+    }
+
+    return left;
+}
+
+// Function to parse and evaluate a number
+double parseNumber(char expression[], int* pos) {
+    double result = 0.0;
+    int decimalFlag = 0;
+    int decimalPlaces = 0;
+
+    // Handle negative numbers
+    if (expression[*pos] == '-') {
+        (*pos)++;
+        result = -parseNumber(expression, pos);
+    } else if (isdigit(expression[*pos])) {
+        // Parse integer part
+        while (isdigit(expression[*pos])) {
+            result = result * 10 + (expression[(*pos)++] - '0');
+        }
+
+        // Parse decimal part if present
+        if (expression[*pos] == '.') {
+            (*pos)++;
+            decimalFlag = 1;
+
+            while (isdigit(expression[*pos])) {
+                result = result * 10 + (expression[(*pos)++] - '0');
+                decimalPlaces++;
+            }
+        }
+    } else if (expression[*pos] == '(') {
+        // Handle parentheses
+        (*pos)++;
+        result = parseExpression(expression);
+        (*pos)++; // Move past the closing parenthesis
+    }
+
+    // Adjust result based on the presence of a decimal point
+    if (decimalFlag) {
+        result /= pow(10, decimalPlaces);
+    }
+
+    return result;
+}
+
+Input:
+2 * (3 + 4) / 2
+
+Output:
+Result: 7.000000

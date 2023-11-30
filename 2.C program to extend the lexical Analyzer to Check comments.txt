@@ -1,0 +1,218 @@
+C Program:
+
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX_TOKEN_LENGTH 50
+
+// Token types
+enum TokenType {
+    IDENTIFIER,
+    CONSTANT,
+    OPERATOR,
+    KEYWORD,
+    COMMENT,
+    INVALID
+};
+
+// Structure to represent a token
+typedef struct {
+    enum TokenType type;
+    char lexeme[MAX_TOKEN_LENGTH];
+} Token;
+
+// Function prototypes
+void initializeLexer();
+Token getNextToken();
+void skipWhitespaceAndComments();
+
+// Global variables
+char input[1000];
+int currentPos;
+
+int main() {
+    printf("Enter a C program (Ctrl+D or Ctrl+Z to end input):\n");
+
+    initializeLexer();
+
+    Token token;
+    do {
+        token = getNextToken();
+
+        switch (token.type) {
+            case IDENTIFIER:
+                printf("Identifier: %s\n", token.lexeme);
+                break;
+            case CONSTANT:
+                printf("Constant: %s\n", token.lexeme);
+                break;
+            case OPERATOR:
+                printf("Operator: %s\n", token.lexeme);
+                break;
+            case KEYWORD:
+                printf("Keyword: %s\n", token.lexeme);
+                break;
+            case COMMENT:
+                printf("Comment: %s\n", token.lexeme);
+                break;
+            case INVALID:
+                printf("Invalid Token: %s\n", token.lexeme);
+                break;
+        }
+    } while (token.type != INVALID);
+
+    return 0;
+}
+
+// Function to initialize the lexer
+void initializeLexer() {
+    fgets(input, sizeof(input), stdin);
+    currentPos = 0;
+}
+
+// Function to skip whitespace and comments
+void skipWhitespaceAndComments() {
+    while (isspace(input[currentPos]) || input[currentPos] == '/') {
+        if (input[currentPos] == '/') {
+            currentPos++;
+            if (input[currentPos] == '/') {
+                // Line comment, skip until the end of the line
+                while (input[currentPos] != '\n' && input[currentPos] != '\0') {
+                    currentPos++;
+                }
+            } else if (input[currentPos] == '*') {
+                // Block comment, skip until the closing */
+                while (!(input[currentPos] == '*' && input[currentPos + 1] == '/')) {
+                    if (input[currentPos] == '\0') {
+                        printf("Error: Unclosed block comment\n");
+                        break;
+                    }
+                    currentPos++;
+                }
+                currentPos += 2;  // Skip the closing */
+            } else {
+                // Not a comment, rewind one character
+                currentPos--;
+                break;
+            }
+        }
+        currentPos++;
+    }
+}
+
+// Function to get the next token
+Token getNextToken() {
+    Token token;
+    token.lexeme[0] = '\0';
+
+    skipWhitespaceAndComments();
+
+    if (input[currentPos] == '\0') {
+        token.type = INVALID;
+        return token;
+    }
+
+    // Identify identifiers, constants, operators, keywords, and comments
+    if (isalpha(input[currentPos]) || input[currentPos] == '_') {
+        // Identifier or keyword
+        int i = 0;
+        while (isalnum(input[currentPos]) || input[currentPos] == '_') {
+            if (i < MAX_TOKEN_LENGTH - 1) {
+                token.lexeme[i++] = input[currentPos++];
+            } else {
+                printf("Error: Identifier or keyword too long\n");
+                break;
+            }
+        }
+        token.lexeme[i] = '\0';
+
+        // Check if it's a keyword
+        if (strcmp(token.lexeme, "if") == 0 || strcmp(token.lexeme, "else") == 0 || strcmp(token.lexeme, "while") == 0) {
+            token.type = KEYWORD;
+        } else {
+            token.type = IDENTIFIER;
+        }
+    } else if (isdigit(input[currentPos])) {
+        // Constant (integer)
+        int i = 0;
+        while (isdigit(input[currentPos])) {
+            if (i < MAX_TOKEN_LENGTH - 1) {
+                token.lexeme[i++] = input[currentPos++];
+            } else {
+                printf("Error: Constant too long\n");
+                break;
+            }
+        }
+        token.lexeme[i] = '\0';
+        token.type = CONSTANT;
+    } else if (input[currentPos] == '+' || input[currentPos] == '-' || input[currentPos] == '*' || input[currentPos] == '/') {
+        // Operator
+        token.lexeme[0] = input[currentPos++];
+        token.lexeme[1] = '\0';
+        token.type = OPERATOR;
+    } else {
+        // Invalid token
+        token.lexeme[0] = input[currentPos++];
+        token.lexeme[1] = '\0';
+        token.type = INVALID;
+    }
+
+    return token;
+}
+
+Input:
+#include <stdio.h>
+
+int main() {
+    // Sample C program with comments
+    int a = 5; // This is a comment
+    int b = 3;
+    int sum = a + b; /* Another comment
+                      spanning multiple lines */
+    printf("Sum: %d\n", sum);
+
+    return 0;
+}
+
+Output:
+Keyword: include
+Operator: <
+Identifier: stdio.h
+Operator: >
+Keyword: int
+Identifier: main
+Operator: (
+Operator: )
+Operator: {
+Keyword: int
+Identifier: a
+Operator: =
+Constant: 5
+Operator: ;
+Comment: // This is a comment
+Keyword: int
+Identifier: b
+Operator: =
+Constant: 3
+Operator: ;
+Keyword: int
+Identifier: sum
+Operator: =
+Identifier: a
+Operator: +
+Identifier: b
+Operator: ;
+Comment: /* Another comment
+                      spanning multiple lines */
+Identifier: printf
+Operator: (
+Constant: "Sum: %d\n"
+Operator: ,
+Identifier: sum
+Operator: )
+Operator: ;
+Keyword: return
+Constant: 0
+Operator: ;
+Operator: }

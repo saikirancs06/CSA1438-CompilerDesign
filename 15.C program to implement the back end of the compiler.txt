@@ -1,0 +1,59 @@
+C Program:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure to represent an intermediate code instruction
+typedef struct {
+    char operation[20];
+    char operand1[20];
+    char operand2[20];
+    char result[20];
+} IntermediateCode;
+
+// Function to generate machine code from intermediate code
+void generateMachineCode(IntermediateCode* intermediateCodes, int numCodes) {
+    printf("\nGenerated Machine Code:\n");
+
+    for (int i = 0; i < numCodes; i++) {
+        printf("%s %s, %s, %s\n",
+               intermediateCodes[i].operation,
+               intermediateCodes[i].operand1,
+               intermediateCodes[i].operand2,
+               intermediateCodes[i].result);
+    }
+}
+
+int main() {
+    // Example intermediate code
+    IntermediateCode intermediateCodes[] = {
+        {"ADD", "a", "b", "t1"},
+        {"SUB", "t1", "c", "t2"},
+        {"MULT", "t2", "d", "t3"},
+        {"DIV", "t3", "e", "result"},
+    };
+
+    int numCodes = sizeof(intermediateCodes) / sizeof(IntermediateCode);
+
+    // Generate machine code
+    generateMachineCode(intermediateCodes, numCodes);
+
+    return 0;
+}
+
+Input:
+// Example intermediate code
+IntermediateCode intermediateCodes[] = {
+    {"ADD", "a", "b", "t1"},
+    {"SUB", "t1", "c", "t2"},
+    {"MULT", "t2", "d", "t3"},
+    {"DIV", "t3", "e", "result"},
+};
+
+Output:
+Generated Machine Code:
+ADD a, b, t1
+SUB t1, c, t2
+MULT t2, d, t3
+DIV t3, e, result

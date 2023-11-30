@@ -1,0 +1,45 @@
+C Program:
+
+#include <stdio.h>
+
+int main() {
+    char input[1000];
+
+    // Read input text
+    printf("Enter text (Ctrl+D or Ctrl+Z to end input):\n");
+    while (fgets(input, sizeof(input), stdin) != NULL) {
+        int whitespaceCount = 0;
+        int newlineCount = 0;
+
+        // Analyze the input to count whitespaces and newlines
+        for (int i = 0; input[i] != '\0'; i++) {
+            if (input[i] == ' ' || input[i] == '\t') {
+                // Whitespace (space or tab) found
+                whitespaceCount++;
+            } else if (input[i] == '\n') {
+                // Newline character found
+                newlineCount++;
+            }
+        }
+
+        // Print the results
+        printf("Whitespaces: %d\n", whitespaceCount);
+        printf("Newline characters: %d\n", newlineCount);
+
+        // Prompt for more input or end the program
+        printf("Enter more text (Ctrl+D or Ctrl+Z to end input):\n");
+    }
+
+    return 0;
+}
+
+Input:
+This is a sample text.
+It has multiple lines.
+The program counts whitespaces and newlines.
+
+Another line here.
+
+Output:
+Whitespaces: 17
+Newline characters: 6

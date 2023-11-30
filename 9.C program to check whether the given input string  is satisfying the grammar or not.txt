@@ -1,0 +1,45 @@
+C Program:
+
+#include <stdio.h>
+#include <string.h>
+
+// Function to check if the input string satisfies the grammar
+int isGrammarValid(const char* input) {
+    int countA = 0;
+    int countB = 0;
+
+    for (int i = 0; i < strlen(input); i++) {
+        if (input[i] == 'a') {
+            countA++;
+        } else if (input[i] == 'b') {
+            countB++;
+        } else {
+            // Invalid character in the input string
+            return 0;
+        }
+    }
+
+    // Check if the number of 'a' is equal to the number of 'b'
+    return countA == countB;
+}
+
+int main() {
+    char input[100];
+
+    // Read input string
+    printf("Enter a string: ");
+    scanf("%s", input);
+
+    // Check if the input string satisfies the grammar
+    if (isGrammarValid(input)) {
+        printf("The input string satisfies the grammar.\n");
+    } else {
+        printf("The input string does not satisfy the grammar.\n");
+    }
+
+    return 0;
+}
+
+Output:
+Enter a string: aabb
+The input string satisfies the grammar.
