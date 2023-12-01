@@ -1,0 +1,28 @@
+LEX Program:
+
+%{
+#include<stdio.h>
+%}
+%%
+"http""://"[a-zA-Z]+".com"|".in" {printf("\n%s is valid URL",yytext);}
+.+ {printf("\n%s is not valid URL",yytext);}
+%%
+
+int yywrap(){}
+int main()
+{
+while(yylex());
+} 
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 32.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+http://saikiran.com
+
+http://saikiran.com is valid URL
