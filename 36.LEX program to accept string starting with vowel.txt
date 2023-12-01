@@ -1,0 +1,31 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+[aeiouAEIOU][a-zA-Z]*    { printf("Accepted: %s\n", yytext); }
+.                         ;
+
+%%
+int yywrap(){return 1;}
+
+int main() {
+    printf("Enter a string: ");
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 36.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+Enter a string: apple
+Accepted: apple
+
