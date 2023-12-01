@@ -1,0 +1,52 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+
+[0-9]+ {
+    printf("Number: %s\n", yytext);
+}
+
+[[:alpha:]]+ {
+    printf("Word: %s\n", yytext);
+}
+
+. {
+    /* Ignore other characters */
+}
+
+%%
+
+int yywrap(){return 1;}
+
+int main() {
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 30.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+pooja is a small girl of age 3 always fond of games
+Word: pooja
+Word: is
+Word: a
+Word: small
+Word: girl
+Word: of
+Word: age
+Number: 3
+Word: always
+Word: fond
+Word: of
+Word: games
+
