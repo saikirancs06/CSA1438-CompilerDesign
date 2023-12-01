@@ -1,0 +1,45 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+
+[0-9]      { printf("The input is a digit: %s\n", yytext); }
+.          { printf("The input is not a digit: %s\n", yytext); }
+
+%%
+
+int yywrap() {
+    return 1; // Returning 1 indicates the end of input.
+}
+
+int main() {
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 34.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+12 34 55 67
+The input is a digit: 1
+The input is a digit: 2
+The input is not a digit:
+The input is a digit: 3
+The input is a digit: 4
+The input is not a digit:
+The input is a digit: 5
+The input is a digit: 5
+The input is not a digit:
+The input is a digit: 6
+The input is a digit: 7
+The input is not a digit:
+
