@@ -1,0 +1,43 @@
+LEX Program:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+
+[ \t\n]      /* Ignore whitespace */
+[[:alpha:]]+ {
+    printf("Word: %s\n", yytext);
+}
+
+[=<>]=? {
+    printf("Relational Operator: %s\n", yytext);
+}
+
+. {
+    /* Ignore other characters */
+}
+
+%%
+
+int yywrap(){return 1;}
+
+int main() {
+    yylex();
+    return 0;
+}
+
+Output:
+
+C:\Users\saiki>cd\lex program
+
+C:\lex program>flex 40.l
+
+C:\lex program>gcc lex.yy.c
+
+C:\lex program>a.exe
+sai
+Word: sai
+=
+Relational Operator: =
